@@ -18,12 +18,12 @@ set_target_properties(bulk unit_tests PROPERTIES
   COMPILE_OPTIONS "-Wall;-Wpedantic;-Wextra"
 )
 
-set_target_properties(unit_tests PROPERTIES
+set_target_properties(unit_tests bulk PROPERTIES
   COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK
   INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR}
 )
 
-target_link_libraries(unit_tests 
+target_link_libraries(unit_tests
   ${Boost_LIBRARIES}
 )
 
