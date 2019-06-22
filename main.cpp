@@ -22,18 +22,18 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  Publisher publisher(size_of_block);
+  Notifier notifier(size_of_block);
 
   auto file_output = std::make_unique<FileOutput>();  
   auto display_output = std::make_unique<DisplayOutput>();   
 
-  publisher.subscribe(file_output.get());
-  publisher.subscribe(display_output.get());
+  notifier.subscribe(file_output.get());
+  notifier.subscribe(display_output.get());
 
   std::string input_line;
   while (std::getline(std::cin, input_line) && input_line != "q")
   {
-    publisher.get_input(input_line);
+    notifier.get_input(input_line);
   }
 
   return 0;

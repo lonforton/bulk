@@ -5,10 +5,10 @@
 #include <cctype>
 
 
-class Handler
+class CommandsHandler
 {
 public:
-  Handler(int size_of_block) : _size_of_block(size_of_block)
+  CommandsHandler(int size_of_block) : _size_of_block(size_of_block)
   {
   }
 
@@ -85,16 +85,16 @@ class Output
 {
 public:
   virtual ~Output() = default;
-  virtual void update(const Handler &handler) = 0;
+  virtual void update(const CommandsHandler &commands_handler) = 0;
 };
 
 class DisplayOutput : public Output
 {
 public:
   virtual ~DisplayOutput() = default;
-  void update(const Handler &handler)
+  void update(const CommandsHandler &commands_handler)
   {
-    std::cout << "bulk: " << handler.getCommandString() << std::endl;
+    std::cout << "bulk: " << commands_handler.getCommandString() << std::endl;
   }
 };
 
@@ -102,21 +102,21 @@ class FileOutput : public Output
 {
 public:
   virtual ~FileOutput() = default;
-  void update(const Handler &handler)
+  void update(const CommandsHandler &commands_handler)
   {
     std::ofstream bulk_file;
-    std::cout << handler.getFirstCommandTimeStamp() << std::endl;
-    bulk_file.open(handler.getFirstCommandTimeStamp() + ".log");
-    bulk_file << handler.getCommandString() << std::endl;
+    std::cout << commands_handler.getFirstCommandTimeStamp() << std::endl;
+    bulk_file.open(commands_handler.getFirstCommandTimeStamp() + ".log");
+    bulk_file << commands_handler.getCommandString() << std::endl;
     bulk_file.close();
   }
 };
 
-class Publisher
+class Notifier
 {
 
 public:
-  Publisher(int size_of_block) : _handler(size_of_block)
+  Notifier(int size_of_block) : _command_handler(size_of_block)
   {
   }
 
@@ -129,16 +129,16 @@ public:
   {
     for (const auto &output : _outputs)
     {
-      output->update(_handler);
+      output->update(_command_handler);
     }
   }
 
   void get_input(const std::string &input_line)
   {
-    if (_handler.is_notify_required(input_line))
+    if (_command_handler.is_notify_required(input_line))
     {
       notify_all();
-      _handler.clear();
+      _command_handler.clear();
     }
   }
 
@@ -152,6 +152,6 @@ public:
   }
 
 private:
-  Handler _handler;
+  CommandsHandler _command_handler;
   std::vector<Output *> _outputs;
 };

@@ -32,11 +32,11 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_1)
   {
     cout_redirect redirect(output.rdbuf());
 
-    Publisher publisher(2);
+    Notifier notifier(2);
 
     auto display_output = std::make_unique<DisplayOutput>(); 
 
-    publisher.subscribe(display_output.get());
+    notifier.subscribe(display_output.get());
 
     std::stringstream ss;
     ss << std::string("c1") << std::endl
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_1)
        << std::string("c3") << std::endl
        << std::string("c4") << std::endl;
 
-    publisher.get_stream_input(ss);
+    notifier.get_stream_input(ss);
   }
   BOOST_CHECK(output.is_equal("bulk: c1 c2\nbulk: c3 c4\n"));
 }
@@ -55,11 +55,11 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_2)
   {
     cout_redirect redirect(output.rdbuf());
 
-    Publisher publisher(1);
+    Notifier notifier(1);
 
     auto display_output = std::make_unique<DisplayOutput>(); 
 
-    publisher.subscribe(display_output.get());
+    notifier.subscribe(display_output.get());
 
     std::stringstream ss;
     ss << std::string("c1") << std::endl
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_2)
        << std::string("c3") << std::endl
        << std::string("c4") << std::endl;
 
-    publisher.get_stream_input(ss);
+    notifier.get_stream_input(ss);
   }
   BOOST_CHECK(output.is_equal("bulk: c1\nbulk: c2\nbulk: c3\nbulk: c4\n"));
 }
@@ -78,11 +78,11 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_3)
   {
     cout_redirect redirect(output.rdbuf());
 
-    Publisher publisher(3);
+    Notifier notifier(3);
 
     auto display_output = std::make_unique<DisplayOutput>(); 
 
-    publisher.subscribe(display_output.get());
+    notifier.subscribe(display_output.get());
 
     std::stringstream ss;
     ss << std::string("c1") << std::endl
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_3)
        << std::string("c7") << std::endl
        << std::string("}") << std::endl;
 
-    publisher.get_stream_input(ss);
+    notifier.get_stream_input(ss);
   }
   BOOST_CHECK(output.is_equal("bulk: c1 c2 c3\nbulk: c4 c5 c6 c7\n"));
 }
@@ -106,11 +106,11 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_4)
   {
     cout_redirect redirect(output.rdbuf());
 
-    Publisher publisher(3);
+    Notifier notifier(3);
 
     auto display_output = std::make_unique<DisplayOutput>(); 
 
-    publisher.subscribe(display_output.get());
+    notifier.subscribe(display_output.get());
 
     std::stringstream ss;
     ss << std::string("{") << std::endl
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_4)
        << std::string("c6") << std::endl
        << std::string("}") << std::endl;
 
-    publisher.get_stream_input(ss);
+    notifier.get_stream_input(ss);
   }
   BOOST_CHECK(output.is_equal("bulk: c1 c2 c3 c4 c5 c6\n"));
 }
@@ -135,11 +135,11 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_5)
   {
     cout_redirect redirect(output.rdbuf());
 
-    Publisher publisher(3);
+    Notifier notifier(3);
 
     auto display_output = std::make_unique<DisplayOutput>(); 
 
-    publisher.subscribe(display_output.get());
+    notifier.subscribe(display_output.get());
 
     std::stringstream ss;
     ss << std::string("c1") << std::endl
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_5)
        << std::string("c6") << std::endl
        << std::string("c7") << std::endl;
 
-    publisher.get_stream_input(ss);
+    notifier.get_stream_input(ss);
   }
   BOOST_CHECK(output.is_equal("bulk: c1 c2 c3\n"));
 }
