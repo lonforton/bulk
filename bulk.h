@@ -4,7 +4,6 @@
 #include <iomanip>
 #include <cctype>
 
-
 class CommandsHandler
 {
 public:
@@ -14,45 +13,65 @@ public:
 
   bool is_notify_required(const std::string &input_line)
   {
-    if (input_line.empty() && _commands.size() > 0 && _brackets_counter <= 0)
-      return true;
-
-    if (input_line.front() == '{')
-    {
-      ++_brackets_counter;
-      return false;
-    }
-
-    if (input_line.front() == '}')
-    {
-      --_brackets_counter;
-      if (_brackets_counter <= 0)
+      switch (map_command(input_line))
       {
-        return true;
-      }
-      return false;
-    }
+      case opening_bracket:
+        if (++brackets_counter == 1 && _commands.size() > 0)
+        {
+          return true;
+        }
+        return false;
+        break;
 
-    if (!input_line.empty())
-    {
-      if (_commands.size() == 0)
-      {
-        first_command_time = std::chrono::system_clock::now();
-      }
-      _commands.push_back(input_line);
-    }
+      case closing_bracket:
+        if (--brackets_counter <= 0)
+        {
+          brackets_counter = 0;
+          return true;
+        }
+        return false;
+        break;
 
-    if (_commands.size() >= _size_of_block && _brackets_counter <= 0)
-    {
-      return true;
-    }
+      case empty_string:
+        if (_commands.size() > 0 && brackets_counter <= 0)
+          return true;
+        return false;
+        break;
+
+      default:
+        if (is_first_command())
+        {
+          first_command_time = std::chrono::system_clock::now();
+        }
+        _commands.push_back(input_line);
+
+        if (_commands.size() >= _size_of_block && brackets_counter <= 0)
+        {
+          return true;
+        }
+        return false;
+        break;
+      }    
 
     return false;
   }
 
-  void clear()
+  void clear_commands()
   {
     _commands.clear();
+  }
+
+  bool is_first_command() const
+  {
+    return _commands.size() == 0;
+  }
+
+  uint32_t map_command(const std::string& command) const
+  {
+    if(command.front() == '{') return opening_bracket;
+    if(command.front() == '}') return closing_bracket;
+    if(command.empty()) return empty_string;
+    return other_command;
   }
 
   std::string getCommandString() const
@@ -77,8 +96,9 @@ public:
 private:
   std::vector<std::string> _commands;
   unsigned int _size_of_block = 0;
-  int _brackets_counter = 0;
+  int brackets_counter = 0;
   std::chrono::time_point<std::chrono::system_clock> first_command_time;
+  enum { opening_bracket = 0, closing_bracket = 1,  empty_string = 2, other_command = 3 };
 };
 
 class Output
@@ -105,7 +125,6 @@ public:
   void update(const CommandsHandler &commands_handler)
   {
     std::ofstream bulk_file;
-    std::cout << commands_handler.getFirstCommandTimeStamp() << std::endl;
     bulk_file.open(commands_handler.getFirstCommandTimeStamp() + ".log");
     bulk_file << commands_handler.getCommandString() << std::endl;
     bulk_file.close();
@@ -138,14 +157,14 @@ public:
     if (_command_handler.is_notify_required(input_line))
     {
       notify_all();
-      _command_handler.clear();
+      _command_handler.clear_commands();
     }
   }
 
   void get_stream_input(std::istream &is)
   {
     std::string input_line;
-    while (std::getline(is, input_line) && input_line != "q")
+    while (std::getline(is, input_line))
     {
       get_input(input_line);
     }
