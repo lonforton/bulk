@@ -6,8 +6,6 @@
 
 int main(int argc, char *argv[])
 {
-  std::cout << "Press q for quit" << std::endl;
-
   if (argc < 2)
   {
     std::cout << "Not enough input args!" << std::endl;
@@ -31,10 +29,11 @@ int main(int argc, char *argv[])
   notifier.subscribe(display_output.get());
 
   std::string input_line;
-  while (std::getline(std::cin, input_line) && input_line != "q")
+  while (std::getline(std::cin, input_line))
   {
     notifier.get_input(input_line);
   }
+   notifier.get_input("");
 
   return 0;
 }
