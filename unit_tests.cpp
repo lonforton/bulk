@@ -40,14 +40,15 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_1)
     notifier.subscribe(display_output.get());
 
     std::stringstream ss;
-    ss << std::string("c1") << std::endl
-       << std::string("c2") << std::endl
-       << std::string("c3") << std::endl
-       << std::string("c4") << std::endl;
+    ss << std::string("1") << std::endl
+       << std::string("2") << std::endl
+       << std::string("3") << std::endl
+       << std::string("4") << std::endl
+       << '\n';
 
     notifier.get_stream_input(ss);
   }
-  BOOST_CHECK(output.is_equal("bulk: c1 c2\nbulk: c3 c4\n"));
+  BOOST_CHECK(output.is_equal("bulk: 1 2\nbulk: 3 4\n"));
 }
 
 BOOST_AUTO_TEST_CASE(bulk_input_test_2)
@@ -63,14 +64,15 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_2)
     notifier.subscribe(display_output.get());
 
     std::stringstream ss;
-    ss << std::string("c1") << std::endl
-       << std::string("c2") << std::endl
-       << std::string("c3") << std::endl
-       << std::string("c4") << std::endl;
+    ss << std::string("1") << std::endl
+       << std::string("2") << std::endl
+       << std::string("3") << std::endl
+       << std::string("4") << std::endl
+       << '\n';
 
     notifier.get_stream_input(ss);
   }
-  BOOST_CHECK(output.is_equal("bulk: c1\nbulk: c2\nbulk: c3\nbulk: c4\n"));
+  BOOST_CHECK(output.is_equal("bulk: 1\nbulk: 2\nbulk: 3\nbulk: 4\n"));
 }
 
 BOOST_AUTO_TEST_CASE(bulk_input_test_3)
@@ -86,19 +88,20 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_3)
     notifier.subscribe(display_output.get());
 
     std::stringstream ss;
-    ss << std::string("c1") << std::endl
-       << std::string("c2") << std::endl
-       << std::string("c3") << std::endl
+    ss << std::string("1") << std::endl
+       << std::string("2") << std::endl
+       << std::string("3") << std::endl
        << std::string("{") << std::endl
-       << std::string("c4") << std::endl
-       << std::string("c5") << std::endl
-       << std::string("c6") << std::endl
-       << std::string("c7") << std::endl
-       << std::string("}") << std::endl;
+       << std::string("4") << std::endl
+       << std::string("5") << std::endl
+       << std::string("6") << std::endl
+       << std::string("7") << std::endl
+       << std::string("}") << std::endl
+       << '\n';
 
     notifier.get_stream_input(ss);
   }
-  BOOST_CHECK(output.is_equal("bulk: c1 c2 c3\nbulk: c4 c5 c6 c7\n"));
+  BOOST_CHECK(output.is_equal("bulk: 1 2 3\nbulk: 4 5 6 7\n"));
 }
 
 BOOST_AUTO_TEST_CASE(bulk_input_test_4)
@@ -115,19 +118,20 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_4)
 
     std::stringstream ss;
     ss << std::string("{") << std::endl
-       << std::string("c1") << std::endl
-       << std::string("c2") << std::endl
+       << std::string("1") << std::endl
+       << std::string("2") << std::endl
        << std::string("{") << std::endl
-       << std::string("c3") << std::endl
-       << std::string("c4") << std::endl
+       << std::string("3") << std::endl
+       << std::string("4") << std::endl
        << std::string("}") << std::endl
-       << std::string("c5") << std::endl
-       << std::string("c6") << std::endl
-       << std::string("}") << std::endl;
+       << std::string("5") << std::endl
+       << std::string("6") << std::endl
+       << std::string("}") << std::endl
+       << '\n';
 
     notifier.get_stream_input(ss);
   }
-  BOOST_CHECK(output.is_equal("bulk: c1 c2 c3 c4 c5 c6\n"));
+  BOOST_CHECK(output.is_equal("bulk: 1 2 3 4 5 6\n"));
 }
 
 BOOST_AUTO_TEST_CASE(bulk_input_test_5)
@@ -143,18 +147,77 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_5)
     notifier.subscribe(display_output.get());
 
     std::stringstream ss;
-    ss << std::string("c1") << std::endl
-       << std::string("c2") << std::endl
-       << std::string("c3") << std::endl
+    ss << std::string("1") << std::endl
+       << std::string("2") << std::endl
+       << std::string("3") << std::endl
        << std::string("{")  << std::endl
-       << std::string("c4") << std::endl
-       << std::string("c5") << std::endl
-       << std::string("c6") << std::endl
-       << std::string("c7") << std::endl;
+       << std::string("4") << std::endl
+       << std::string("5") << std::endl
+       << std::string("6") << std::endl
+       << std::string("7") << std::endl
+       << '\n';
 
     notifier.get_stream_input(ss);
   }
-  BOOST_CHECK(output.is_equal("bulk: c1 c2 c3\n"));
+  BOOST_CHECK(output.is_equal("bulk: 1 2 3\n"));
+}
+
+BOOST_AUTO_TEST_CASE(bulk_input_test_6)
+{
+  boost::test_tools::output_test_stream output;
+  {
+    cout_redirect redirect(output.rdbuf());
+
+    Notifier notifier(3);
+
+    auto display_output = std::make_unique<DisplayOutput>(); 
+
+    notifier.subscribe(display_output.get());
+
+    std::stringstream ss;
+    ss << std::string("0") << std::endl
+       << std::string("1") << std::endl
+       << std::string("2") << std::endl
+       << std::string("3") << std::endl
+       << std::string("4") << std::endl
+       << std::string("5") << std::endl
+       << std::string("6") << std::endl
+       << std::string("7") << std::endl
+       << std::string("8") << std::endl
+       << std::string("9") << std::endl
+       << '\n';
+
+    notifier.get_stream_input(ss);
+  }
+  BOOST_CHECK(output.is_equal("bulk: 0 1 2\nbulk: 3 4 5\nbulk: 6 7 8\nbulk: 9\n"));
+}
+
+BOOST_AUTO_TEST_CASE(bulk_input_test_7)
+{
+  boost::test_tools::output_test_stream output;
+  {
+    cout_redirect redirect(output.rdbuf());
+
+    Notifier notifier(3);
+
+    auto display_output = std::make_unique<DisplayOutput>(); 
+
+    notifier.subscribe(display_output.get());
+
+    std::stringstream ss;
+    ss << std::string("0") << std::endl
+       << std::string("1") << std::endl
+       << std::string("2") << std::endl
+       << std::string("3") << std::endl
+       << std::string("4") << std::endl
+       << std::string("{") << std::endl
+       << std::string("00") << std::endl
+       << std::string("}") << std::endl
+       << '\n';
+
+    notifier.get_stream_input(ss);
+  }
+  BOOST_CHECK(output.is_equal("bulk: 0 1 2\nbulk: 3 4\nbulk: 00\n"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
