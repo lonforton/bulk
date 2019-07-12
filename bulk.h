@@ -32,12 +32,6 @@ public:
         return false;
         break;
 
-      case empty_string:
-        if (_commands.size() > 0 && brackets_counter <= 0)
-          return true;
-        return false;
-        break;
-
       default:
         if (is_first_command())
         {
@@ -70,7 +64,6 @@ public:
   {
     if(command.front() == '{') return opening_bracket;
     if(command.front() == '}') return closing_bracket;
-    if(command.empty()) return empty_string;
     return other_command;
   }
 
@@ -161,13 +154,19 @@ public:
     }
   }
 
+  void close_input()
+  {
+    get_input(std::string("{"));
+  }
+
   void get_stream_input(std::istream &is)
   {
     std::string input_line;
     while (std::getline(is, input_line))
     {
-      get_input(input_line);
+       get_input(input_line);     
     }
+     close_input();
   }
 
 private:
