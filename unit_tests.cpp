@@ -43,8 +43,7 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_1)
     ss << std::string("1") << std::endl
        << std::string("2") << std::endl
        << std::string("3") << std::endl
-       << std::string("4") << std::endl
-       << '\n';
+       << std::string("4") << std::endl;
 
     notifier.get_stream_input(ss);
   }
@@ -67,8 +66,7 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_2)
     ss << std::string("1") << std::endl
        << std::string("2") << std::endl
        << std::string("3") << std::endl
-       << std::string("4") << std::endl
-       << '\n';
+       << std::string("4") << std::endl;       
 
     notifier.get_stream_input(ss);
   }
@@ -96,8 +94,7 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_3)
        << std::string("5") << std::endl
        << std::string("6") << std::endl
        << std::string("7") << std::endl
-       << std::string("}") << std::endl
-       << '\n';
+       << std::string("}") << std::endl;
 
     notifier.get_stream_input(ss);
   }
@@ -126,8 +123,7 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_4)
        << std::string("}") << std::endl
        << std::string("5") << std::endl
        << std::string("6") << std::endl
-       << std::string("}") << std::endl
-       << '\n';
+       << std::string("}") << std::endl;
 
     notifier.get_stream_input(ss);
   }
@@ -154,9 +150,7 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_5)
        << std::string("4") << std::endl
        << std::string("5") << std::endl
        << std::string("6") << std::endl
-       << std::string("7") << std::endl
-       << '\n';
-
+       << std::string("7") << std::endl;
     notifier.get_stream_input(ss);
   }
   BOOST_CHECK(output.is_equal("bulk: 1 2 3\n"));
@@ -184,8 +178,7 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_6)
        << std::string("6") << std::endl
        << std::string("7") << std::endl
        << std::string("8") << std::endl
-       << std::string("9") << std::endl
-       << '\n';
+       << std::string("9") << std::endl;
 
     notifier.get_stream_input(ss);
   }
@@ -212,12 +205,38 @@ BOOST_AUTO_TEST_CASE(bulk_input_test_7)
        << std::string("4") << std::endl
        << std::string("{") << std::endl
        << std::string("00") << std::endl
-       << std::string("}") << std::endl
-       << '\n';
+       << std::string("}") << std::endl;
 
     notifier.get_stream_input(ss);
   }
   BOOST_CHECK(output.is_equal("bulk: 0 1 2\nbulk: 3 4\nbulk: 00\n"));
+}
+
+BOOST_AUTO_TEST_CASE(bulk_input_test_8)
+{
+  boost::test_tools::output_test_stream output;
+  {
+    cout_redirect redirect(output.rdbuf());
+
+    Notifier notifier(2);
+
+    auto display_output = std::make_unique<DisplayOutput>(); 
+
+    notifier.subscribe(display_output.get());
+
+    std::stringstream ss;
+    ss << std::string("0") << std::endl
+       << std::string("") << std::endl
+       << std::string("") << std::endl
+       << std::string("1") << std::endl
+       << std::string("") << std::endl
+       << std::string("") << std::endl
+       << std::string("2") << std::endl
+       << std::string("3") << std::endl;
+
+    notifier.get_stream_input(ss);
+  }
+  BOOST_CHECK(output.is_equal("bulk: 0 \nbulk:  1\nbulk:  \nbulk: 2 3\n"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
