@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
   if (argc < 2)
   {
-    std::cout << "Not enough input args!" << std::endl;
+    std::cout << "Usage: bulk N (N - amount of command for accumulation)" << std::endl;
     return 1;
   }
 
@@ -29,11 +29,11 @@ int main(int argc, char *argv[])
   notifier.subscribe(display_output.get());
 
   std::string input_line;
-  while (std::getline(std::cin, input_line))
-  {
+  while(std::getline(std::cin, input_line))
+  {    
     notifier.get_input(input_line);
   }
-   notifier.get_input("");
+  notifier.close_input();
 
   return 0;
 }
