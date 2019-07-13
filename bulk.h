@@ -91,7 +91,7 @@ private:
   unsigned int _size_of_block = 0;
   int brackets_counter = 0;
   std::chrono::time_point<std::chrono::system_clock> first_command_time;
-  enum { opening_bracket = 0, closing_bracket = 1,  empty_string = 2, other_command = 3 };
+  enum { opening_bracket = 0, closing_bracket = 1,  other_command = 2 };
 };
 
 class Output
